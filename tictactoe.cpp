@@ -7,15 +7,29 @@ struct Field
     int x;
     int y;
     Color color;
+    Rectangle rec;
 };
 
 void DrawMatrix(Field *matrix, int size)
 {
+
     int x{0};
     int y{0};
+    Vector2 mousePos = GetMousePosition();
     for (int i = 0; i < size; i++)
     {
-        DrawRectangle(matrix[i].x + x, matrix[i].y + y, matrix[i].width, matrix[i].height, matrix[i].color);
+        Rectangle rec{
+            static_cast<float>(matrix[i].x + x),
+            static_cast<float>(matrix[i].y + y),
+            static_cast<float>(matrix[i].width),
+            static_cast<float>(matrix[i].height)};
+        matrix[i].rec = rec;
+        
+        if (CheckCollisionPointRec(mousePos, matrix[i].rec) && IsMouseButtonDown(0))
+        {
+            matrix[i].color = RED;
+        }
+        DrawRectangle(rec.x, rec.y, rec.width, rec.height, matrix[i].color);
         x += matrix[i].width + 2;
         bool newLine = !((i + 1) % 3);
         if (newLine)
@@ -42,7 +56,7 @@ int main()
         matrix[i].height = 200;
         matrix[i].x = 0;
         matrix[i].y = 0;
-        matrix[i].color = RED;
+        matrix[i].color = GRAY;
     }
     //settings
     int targetFPS{60};
@@ -51,13 +65,14 @@ int main()
     // int fontSize{20};
     SetTargetFPS(targetFPS);
     InitWindow(width, height, "TicTacToe");
-
+    
     while (!WindowShouldClose())
     {
         BeginDrawing();
         ClearBackground(WHITE);
         //begin game logic
         DrawMatrix(matrix, matrixSize);
+
         EndDrawing();
     }
 }

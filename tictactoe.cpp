@@ -10,33 +10,37 @@ struct Field
     Rectangle rec;
 };
 
-void DrawMatrix(Field *matrix, int size)
+void DrawGameboard(Field matrix[][3], int size)
 {
-
     int x{0};
     int y{0};
     Vector2 mousePos = GetMousePosition();
+
     for (int i = 0; i < size; i++)
     {
-        Rectangle rec{
-            static_cast<float>(matrix[i].x + x),
-            static_cast<float>(matrix[i].y + y),
-            static_cast<float>(matrix[i].width),
-            static_cast<float>(matrix[i].height)};
-        matrix[i].rec = rec;
-        
-        if (CheckCollisionPointRec(mousePos, matrix[i].rec) && IsMouseButtonDown(0))
+        for (int j = 0; j < size; j++)
         {
-            matrix[i].color = RED;
+            Rectangle rec{
+                static_cast<float>(matrix[i][j].x + x),
+                static_cast<float>(matrix[i][j].y + y),
+                static_cast<float>(matrix[i][j].width),
+                static_cast<float>(matrix[i][j].height)};
+
+            matrix[i][j].rec = rec;
+
+            if (CheckCollisionPointRec(mousePos, matrix[i][j].rec) && IsMouseButtonDown(0))
+            {
+                matrix[i][j].color = RED;
+            }
+            else if (CheckCollisionPointRec(mousePos, matrix[i][j].rec) && IsMouseButtonDown(1))
+            {
+                matrix[i][j].color = BLUE;
+            }
+            DrawRectangle(rec.x, rec.y, rec.width, rec.height, matrix[i][j].color);
+            x += matrix[i][j].width + 2;
         }
-        DrawRectangle(rec.x, rec.y, rec.width, rec.height, matrix[i].color);
-        x += matrix[i].width + 2;
-        bool newLine = !((i + 1) % 3);
-        if (newLine)
-        {
-            y += matrix[i].height + 2;
-            x = 0;
-        }
+        y += matrix[i][0].height + 2;
+        x = 0;
     }
 }
 
@@ -48,16 +52,18 @@ int main()
     // int windowStart{0};
 
     //init fields
-    const int matrixSize{9};
-    Field matrix[matrixSize];
-    for (int i = 0; i < matrixSize; i++)
+    const int size{3};
+    Field gameboard[size][size];
+    Field emptyField{200, 200, 0, 0, GRAY};
+
+    for (int i = 0; i < size; i++)
     {
-        matrix[i].width = 200;
-        matrix[i].height = 200;
-        matrix[i].x = 0;
-        matrix[i].y = 0;
-        matrix[i].color = GRAY;
+        for (int j = 0; j < size; j++)
+        {
+            gameboard[i][j] = emptyField;
+        }
     }
+
     //settings
     int targetFPS{60};
     // int speed{10};
@@ -65,13 +71,14 @@ int main()
     // int fontSize{20};
     SetTargetFPS(targetFPS);
     InitWindow(width, height, "TicTacToe");
-    
+
     while (!WindowShouldClose())
     {
         BeginDrawing();
         ClearBackground(WHITE);
         //begin game logic
-        DrawMatrix(matrix, matrixSize);
+
+        DrawGameboard(gameboard, size);
 
         EndDrawing();
     }

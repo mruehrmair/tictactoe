@@ -1,4 +1,6 @@
+#include <sstream>
 #include "raylib.h"
+#include "Player.h"
 
 struct Field
 {
@@ -46,6 +48,8 @@ void DrawGameboard(Field matrix[][3], int size)
 
 int main()
 {
+    Player playerOne(1,"Markis");
+    
     //window dimensions
     int width{800};
     int height{600};
@@ -77,7 +81,11 @@ int main()
         BeginDrawing();
         ClearBackground(WHITE);
         //begin game logic
-
+        //draw player info panel
+        std::stringstream playerName;
+        playerName << "Player name:" << std::endl << playerOne.getName();
+        DrawText(playerName.str().c_str(),650,300,20,RED);
+        //
         DrawGameboard(gameboard, size);
 
         EndDrawing();

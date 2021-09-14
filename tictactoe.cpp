@@ -47,7 +47,7 @@ void DrawGameboard(Field matrix[][3], int size)
     }
 }
 
-int main()
+/* int main()
 {
     Player playerOne(1,"Markis");
     Player playerTwo(2,"Ela");
@@ -93,4 +93,4 @@ int main()
 
         EndDrawing();
     }
-}
+} */

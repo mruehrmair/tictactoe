@@ -1,5 +1,6 @@
 #include <sstream>
 #include "raylib.h"
+#include "Game.h"
 #include "Player.h"
 
 struct Field
@@ -49,14 +50,16 @@ void DrawGameboard(Field matrix[][3], int size)
 int main()
 {
     Player playerOne(1,"Markis");
-    
+    Player playerTwo(2,"Ela");
+    Game game = Game();
+    game.move(playerOne,2,2);
     //window dimensions
     int width{800};
     int height{600};
     // int windowStart{0};
 
     //init fields
-    const int size{3};
+    const int size = game.SIZE;
     Field gameboard[size][size];
     Field emptyField{200, 200, 0, 0, GRAY};
 

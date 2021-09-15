@@ -13,7 +13,7 @@ Game::Game()
     }
 }
 
-int Game::move(Player& player, int x, int y)
+int Game::move(Player const &player, int x, int y)
 {
     if (gameboard[x][y] == 0)
     {
@@ -26,7 +26,7 @@ int Game::move(Player& player, int x, int y)
     return 0;
 }
 
-int Game::getGameboardField(int x, int y)
+int Game::getGameboardField(int x, int y) const
 {
     return gameboard[x][y];
 }

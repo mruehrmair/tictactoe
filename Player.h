@@ -10,6 +10,6 @@ private:
 
 public:
     Player(int number, std::string name);
-    int getNumber();
-    std::string getName();
+    int getNumber() const;
+    std::string getName() const;
 };

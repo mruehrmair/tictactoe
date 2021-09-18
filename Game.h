@@ -15,8 +15,10 @@ public:
     Game();
     int move(Player const& player, int x, int y);
     int getGameboardField(int x, int y) const;
+    void setPlayers(std::array<Player, 2> players);
 
 private:
     std::array<std::array<int, SIZE>, SIZE> gameboard;
+    std::array<Player, 2> players;
     
 };

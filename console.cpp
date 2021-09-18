@@ -39,6 +39,7 @@ int main()
     const Player playerTwo(2, name);
     std::array<Player, 2> players = {playerOne, playerTwo};
     Game game = Game();
+    game.setPlayers(players);
     while (!game.hasGameEnded)
     {
         int size = (int)players.size();

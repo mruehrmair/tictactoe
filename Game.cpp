@@ -2,11 +2,8 @@
 #include "Player.h"
 #include "Game.h"
 
-Game::Game()
+void Game::initGameBoard()
 {
-    const Player playerOne(1,"Player One");
-    const Player playerTwo(1,"Player Two");
-    players = {playerOne, playerTwo};
     for (int i = 0; i < SIZE; i++)
     {
         for (int j = 0; j < SIZE; j++)
@@ -16,17 +13,22 @@ Game::Game()
     }
 }
 
-int Game::move(Player const &player, int x, int y)
+int Game::getGameState() const &
+{
+    return Game::gameState;
+}
+
+void Game::move(int x, int y)
 {
     if (gameboard[x][y] == 0)
     {
-        gameboard[x][y] = player.getNumber();
+        gameboard[x][y] = getActivePlayer().getNumber();
     }
     else
     {
-        return Game::FIELDTAKEN;
+        gameState = Game::FIELDTAKEN;
     }
-    return 0;
+    gameState = Game::GAMERUNNING;
 }
 
 int Game::getGameboardField(int x, int y) const
@@ -34,7 +36,46 @@ int Game::getGameboardField(int x, int y) const
     return gameboard[x][y];
 }
 
-void Game::setPlayers(std::array<Player, 2> players)
+void Game::setPlayers(std::array<Player, 2> const &players)
 {
     Game::players = players;
+}
+
+Player Game::getActivePlayer()
+{
+    int size = (int)players.size();
+    for (int i = 0; i < size; i++)
+    {
+        if (players[i].getActive())
+        {
+            return players[i];
+        }
+    }
+    //something's wrong
+    //TODO throw exception
+    return Player();
+}
+
+void Game::startGame()
+{
+    turnNumber = 1;
+    initGameBoard();
+    Game::players[0].setActive(true);
+    Game::players[1].setActive(false);
+    gameState = GAMERUNNING;
+}
+
+int Game::getTurnNumber()
+{
+    return Game::turnNumber;
+}
+
+void Game::endTurn()
+{
+    turnNumber++;
+    int size = (int)players.size();
+    for (int i = 0; i < size; i++)
+    {
+        players[i].setActive(!players[i].getActive());
+    }
 }

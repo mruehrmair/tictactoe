@@ -15,17 +15,20 @@ void DisplayGameboard(Game const &game)
     }
 }
 
-void Move(Player const &player, Game &game)
+void PlayerTurn(Game &game)
 {
-    std::cout << player.getName() << ", your turn: " << std::endl;
+
+    std::cout << "Turn number: " << game.getTurnNumber() << std::endl;
+    std::cout << game.getActivePlayer().getName() << ", your turn: " << std::endl;
     int x;
     int y;
     std::cin >> x;
     std::cin >> y;
-    game.move(player, x, y);
+    game.move(x, y);
+    game.endTurn();
 }
 
-int main()
+std::array<Player, 2> InitPlayers()
 {
     std::string name;
     std::cout << "TicTacToe " << std::endl;
@@ -38,16 +41,21 @@ int main()
     std::cout << "Hello, " + name << std::endl;
     const Player playerTwo(2, name);
     std::array<Player, 2> players = {playerOne, playerTwo};
+    return players;
+}
+
+int main()
+{
     Game game = Game();
-    game.setPlayers(players);
-    while (!game.hasGameEnded)
+    game.setPlayers(InitPlayers());
+    game.startGame();
+    //game loop
+    while (!(game.getGameState() == game.GAMEEND))
     {
-        int size = (int)players.size();
-        for (int i = 0; i < size; i++)
+        while (game.getGameState() != game.PLAYERWON)
         {
-            Move(players[i], game);
+            PlayerTurn(game);
             DisplayGameboard(game);
         }
-        game.hasGameEnded = true;
     }
 }

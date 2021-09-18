@@ -19,12 +19,14 @@ public:
     Player getActivePlayer();
     int getTurnNumber();
     void startGame();
+    void stopGame();
     void endTurn();
 
 private:
     int turnNumber = 0;
     int gameState = GAMEEND;
     void initGameBoard();
+    void checkWin(int activePlayerNumber);
     std::array<std::array<int, SIZE>, SIZE> gameboard;
     std::array<Player, 2> players;
 };

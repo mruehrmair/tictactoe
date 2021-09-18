@@ -15,17 +15,25 @@ void DisplayGameboard(Game const &game)
     }
 }
 
-void PlayerTurn(Game &game)
+void PlayerInput(Game &game)
 {
-
-    std::cout << "Turn number: " << game.getTurnNumber() << std::endl;
     std::cout << game.getActivePlayer().getName() << ", your turn: " << std::endl;
     int x;
     int y;
     std::cin >> x;
     std::cin >> y;
     game.move(x, y);
-    game.endTurn();
+    if (game.getGameState() == game.FIELDTAKEN)
+    {
+        std::cout << "Unable to use that field, it's already taken!" << std::endl;
+        PlayerInput(game);
+    }
+}
+
+void PlayerTurn(Game &game)
+{
+    std::cout << "Turn number: " << game.getTurnNumber() << std::endl;
+    PlayerInput(game);
 }
 
 std::array<Player, 2> InitPlayers()
@@ -52,10 +60,15 @@ int main()
     //game loop
     while (!(game.getGameState() == game.GAMEEND))
     {
-        while (game.getGameState() != game.PLAYERWON)
+        PlayerTurn(game);
+        DisplayGameboard(game);
+        switch (game.getGameState())
         {
-            PlayerTurn(game);
-            DisplayGameboard(game);
+        case game.PLAYERWON:
+            std::cout << "Congratulations, " << game.getActivePlayer().getName() << ". You win!" << std::endl;
+            game.stopGame();
+            break;
         }
+        game.endTurn();
     }
 }

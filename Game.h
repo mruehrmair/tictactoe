@@ -12,6 +12,7 @@ public:
     const static int PLAYERWON = 2;
     const static int FIELDTAKEN = 3;
     const static int GAMEDRAW = 4;
+    const static int EMPTYFIELD = 0;
     int getGameState() const &;
     void move(int x, int y);
     int getGameboardField(int x, int y) const;
@@ -27,6 +28,7 @@ private:
     int gameState = GAMEEND;
     void initGameBoard();
     void checkWin(int activePlayerNumber);
+    void checkDraw();
     std::array<std::array<int, SIZE>, SIZE> gameboard;
     std::array<Player, 2> players;
 };

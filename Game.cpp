@@ -8,7 +8,7 @@ void Game::initGameBoard()
     {
         for (int j = 0; j < SIZE; j++)
         {
-            gameboard[i][j] = 0;
+            gameboard[i][j] = EMPTYFIELD;
         }
     }
 }
@@ -20,8 +20,9 @@ int Game::getGameState() const &
 
 void Game::move(int x, int y)
 {
+    //TODO Exception handling on wrong input
     int number = getActivePlayer().getNumber();
-    if (gameboard[x][y] == 0)
+    if (gameboard[x][y] == EMPTYFIELD)
     {
         gameboard[x][y] = number;
         gameState = Game::GAMERUNNING;
@@ -31,6 +32,27 @@ void Game::move(int x, int y)
         gameState = Game::FIELDTAKEN;
     }
     checkWin(number);
+    if (gameState == Game::GAMERUNNING)
+    {
+        checkDraw();
+    }
+}
+
+void Game::checkDraw()
+{
+    for (int i = 0; i < SIZE; i++)
+    {
+        for (int j = 0; j < SIZE; j++)
+        {
+            if(gameboard[i][j] == EMPTYFIELD)
+            {
+                //still empty fields left
+                return;
+            }
+        }
+    }
+    //no empty fields left
+    gameState = GAMEDRAW;
 }
 
 void Game::checkWin(int activePlayerNumber)
@@ -73,14 +95,14 @@ void Game::checkWin(int activePlayerNumber)
     }
     for (int i = 0; i < SIZE; i++)
     {
-       //check anti-diag
+        //check anti-diag
         if (gameboard[i][(SIZE - 1) - i] != activePlayerNumber)
             break;
         if (i == SIZE - 1)
         {
             gameState = Game::PLAYERWON;
             return;
-        } 
+        }
     }
 }
 

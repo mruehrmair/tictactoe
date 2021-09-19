@@ -15,6 +15,19 @@ void DisplayGameboard(Game const &game)
     }
 }
 
+bool IsInputValid(int x, int y)
+{
+    int input[2] = {x, y};
+    for (int i = 0; i < 2; i++)
+    {
+        if (input[i] != 0 && input[i] != 1 && input[i] != 2)
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
 void PlayerInput(Game &game)
 {
     std::cout << game.getActivePlayer().getName() << ", your turn: " << std::endl;
@@ -22,10 +35,20 @@ void PlayerInput(Game &game)
     int y;
     std::cin >> x;
     std::cin >> y;
-    game.move(x, y);
+    if (IsInputValid(x, y))
+    {
+        game.move(x, y);
+    }
+    else
+    {
+        std::cout << "Fields are not valid! Enter row number then column number starting with 0." << std::endl;
+        std::cin.clear();
+        std::cin.ignore(10000, '\n');
+        PlayerInput(game);
+    }
     if (game.getGameState() == game.FIELDTAKEN)
     {
-        std::cout << "Unable to use that field, it's already taken!" << std::endl;
+        std::cout << "Unable to use that field, it's already taken or doesn't exist!" << std::endl;
         PlayerInput(game);
     }
 }
@@ -66,6 +89,10 @@ int main()
         {
         case game.PLAYERWON:
             std::cout << "Congratulations, " << game.getActivePlayer().getName() << ". You win!" << std::endl;
+            game.stopGame();
+            break;
+        case game.GAMEDRAW:
+            std::cout << "All fields are taken and there is no winner. Game is a draw!" << std::endl;
             game.stopGame();
             break;
         }

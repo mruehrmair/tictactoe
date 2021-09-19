@@ -15,6 +15,7 @@ public:
     const static int EMPTYFIELD = 0;
     int getGameState() const &;
     void move(int x, int y);
+    void aiMove();
     int getGameboardField(int x, int y) const;
     void setPlayers(std::array<Player, 2> const &players);
     Player getActivePlayer();
@@ -29,6 +30,7 @@ private:
     void initGameBoard();
     void checkWin(int activePlayerNumber);
     void checkDraw();
+    int randomNumber(int max);
     std::array<std::array<int, SIZE>, SIZE> gameboard;
     std::array<Player, 2> players;
 };

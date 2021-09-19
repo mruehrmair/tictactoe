@@ -38,13 +38,26 @@ void Game::move(int x, int y)
     }
 }
 
+void Game::aiMove()
+{
+    int x = randomNumber(2);
+    int y = randomNumber(2);
+    move(x, y);
+    while (gameState == Game::FIELDTAKEN)
+    {
+        x = randomNumber(2);
+        y = randomNumber(2);
+        move(x, y);
+    }
+}
+
 void Game::checkDraw()
 {
     for (int i = 0; i < SIZE; i++)
     {
         for (int j = 0; j < SIZE; j++)
         {
-            if(gameboard[i][j] == EMPTYFIELD)
+            if (gameboard[i][j] == EMPTYFIELD)
             {
                 //still empty fields left
                 return;
@@ -158,4 +171,17 @@ void Game::endTurn()
     {
         players[i].setActive(!players[i].getActive());
     }
+}
+
+int Game::randomNumber(int max)
+{
+    int random_integer;
+    int lowest = 0, highest = max;
+    int range = (highest - lowest) + 1;
+    for (int index = 0; index < 20; index++)
+    {
+        random_integer = lowest + int(range * rand() / (RAND_MAX + 1.0));
+    }
+
+    return random_integer;
 }

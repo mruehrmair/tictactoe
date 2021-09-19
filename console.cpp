@@ -53,24 +53,45 @@ void PlayerInput(Game &game)
     }
 }
 
+void AiInput(Game &game)
+{
+    std::cout << "Computer's turn: " << std::endl;
+    game.aiMove();
+}
+
 void PlayerTurn(Game &game)
 {
     std::cout << "Turn number: " << game.getTurnNumber() << std::endl;
-    PlayerInput(game);
+    if (game.getActivePlayer().getIsAi())
+    {
+        AiInput(game);
+    }
+    else
+    {
+        PlayerInput(game);
+    }
 }
 
 std::array<Player, 2> InitPlayers()
 {
+    bool isAi = false;
     std::string name;
     std::cout << "TicTacToe " << std::endl;
     std::cout << "Player 1, please enter your name: ";
     std::cin >> name;
     std::cout << "Hello, " + name << std::endl;
-    const Player playerOne(1, name);
-    std::cout << "Player 2, please enter your name: ";
+    const Player playerOne(1, name, isAi);
+    std::cout << "Player 2, please enter your name (Enter 'Computer' for AI): ";
     std::cin >> name;
-    std::cout << "Hello, " + name << std::endl;
-    const Player playerTwo(2, name);
+    if (name == "Computer")
+    {
+        isAi = true;
+    }
+    else
+    {
+        std::cout << "Hello, " + name << std::endl;
+    }
+    const Player playerTwo(2, name, isAi);
     std::array<Player, 2> players = {playerOne, playerTwo};
     return players;
 }

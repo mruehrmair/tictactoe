@@ -3,76 +3,82 @@
 #include "Game.h"
 #include "Player.h"
 
-struct Field
+void PlayerInput(Game &game, int x, int y)
 {
-    int width;
-    int height;
-    int x;
-    int y;
-    Color color;
-    Rectangle rec;
-};
+    if (game.getGameboardField(x, y) == game.EMPTYFIELD)
+    {
+        game.move(x, y);
+        game.endTurn();
+        if (game.getGameState() == 1)
+        {
+            game.aiMove();
+            game.endTurn();
+        }
+    }
+}
 
-void DrawGameboard(Field matrix[][3], int size)
+void DrawGameboard(Game &game)
 {
     int x{0};
     int y{0};
+    int width{200};
+    int height{200};
+    Color color;
     Vector2 mousePos = GetMousePosition();
 
-    for (int i = 0; i < size; i++)
+    for (int i = 0; i < game.SIZE; i++)
     {
-        for (int j = 0; j < size; j++)
+        for (int j = 0; j < game.SIZE; j++)
         {
+            int field = game.getGameboardField(i, j);
             Rectangle rec{
-                static_cast<float>(matrix[i][j].x + x),
-                static_cast<float>(matrix[i][j].y + y),
-                static_cast<float>(matrix[i][j].width),
-                static_cast<float>(matrix[i][j].height)};
+                static_cast<float>(0 + x),
+                static_cast<float>(0 + y),
+                static_cast<float>(width),
+                static_cast<float>(height)};
 
-            matrix[i][j].rec = rec;
+            switch (field)
+            {
+            case game.EMPTYFIELD:
+                color = GRAY;
+                break;
+            case 1:
+                color = BLUE;
+                break;
+            case 2:
+                color = RED;
+            }
 
-            if (CheckCollisionPointRec(mousePos, matrix[i][j].rec) && IsMouseButtonDown(0))
+            if (CheckCollisionPointRec(mousePos, rec) && IsMouseButtonReleased(0))
             {
-                matrix[i][j].color = RED;
+                PlayerInput(game, i, j);
             }
-            else if (CheckCollisionPointRec(mousePos, matrix[i][j].rec) && IsMouseButtonDown(1))
-            {
-                matrix[i][j].color = BLUE;
-            }
-            DrawRectangle(rec.x, rec.y, rec.width, rec.height, matrix[i][j].color);
-            x += matrix[i][j].width + 2;
+
+            DrawRectangle(rec.x, rec.y, rec.width, rec.height, color);
+            x += width + 2;
         }
-        y += matrix[i][0].height + 2;
+        y += height + 2;
         x = 0;
     }
 }
 
-/* int main()
+int main()
 {
-    Player playerOne(1,"Markis");
-    Player playerTwo(2,"Ela");
+    //setup game
     Game game = Game();
-    game.move(playerOne,2,2);
+    const Player playerOne(1, "Player One", false);
+    const Player playerTwo(2, "Computer", true);
+    std::array<Player, 2> players = {playerOne, playerTwo};
+    game.setPlayers(players);
+    game.startGame();
+
     //window dimensions
     int width{800};
     int height{600};
     // int windowStart{0};
 
-    //init fields
-    const int size = game.SIZE;
-    Field gameboard[size][size];
-    Field emptyField{200, 200, 0, 0, GRAY};
-
-    for (int i = 0; i < size; i++)
-    {
-        for (int j = 0; j < size; j++)
-        {
-            gameboard[i][j] = emptyField;
-        }
-    }
-
     //settings
-    int targetFPS{60};
+    int targetFPS{30};
     // int speed{10};
     // int direction{10};
     // int fontSize{20};
@@ -81,16 +87,33 @@ void DrawGameboard(Field matrix[][3], int size)
 
     while (!WindowShouldClose())
     {
+        //begin game logic
+
+        //draw player info panel
+        /*  std::stringstream playerName;
+        playerName << "Player name:" << std::endl << playerOne.getName();
+        DrawText(playerName.str().c_str(),650,300,20,RED); */
+        //
+
         BeginDrawing();
         ClearBackground(WHITE);
-        //begin game logic
-        //draw player info panel
-        std::stringstream playerName;
-        playerName << "Player name:" << std::endl << playerOne.getName();
-        DrawText(playerName.str().c_str(),650,300,20,RED);
-        //
-        DrawGameboard(gameboard, size);
+        DrawGameboard(game);
+        switch (game.getGameState())
+        {
+        case game.PLAYERWON:
+            game.stopGame();
+            DrawText("Game over!", 650, 300, 20, RED);
+            break;
+        case game.GAMEDRAW:
+            game.stopGame();
+            DrawText("Draw!", 650, 300, 20, RED);
+            break;
+        }
 
+        /* while (!(game.getGameState() == game.GAMEEND))
+        {
+        } */
         EndDrawing();
     }
-} */
+    CloseWindow();
+}

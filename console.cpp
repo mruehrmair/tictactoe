@@ -96,7 +96,7 @@ std::array<Player, 2> InitPlayers()
     return players;
 }
 
-int main()
+/* int main()
 {
     Game game = Game();
     game.setPlayers(InitPlayers());
@@ -119,4 +119,4 @@ int main()
         }
         game.endTurn();
     }
-}
+} */

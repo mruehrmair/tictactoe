@@ -3,7 +3,7 @@
 #include "Game.h"
 #include "Player.h"
 
-struct Field
+/* struct Field
 {
     int width;
     int height;
@@ -12,64 +12,64 @@ struct Field
     Color color;
     Rectangle rec;
 };
-
-void DrawGameboard(Field matrix[][3], int size)
+ */
+void DrawGameboard(Game const &game)
 {
     int x{0};
     int y{0};
-    Vector2 mousePos = GetMousePosition();
+    int width{200};
+    int height{200};
+    Color color = GRAY;
 
-    for (int i = 0; i < size; i++)
+    for (int i = 0; i < game.SIZE; i++)
     {
-        for (int j = 0; j < size; j++)
+        for (int j = 0; j < game.SIZE; j++)
         {
+            int field = game.getGameboardField(i, j);
             Rectangle rec{
-                static_cast<float>(matrix[i][j].x + x),
-                static_cast<float>(matrix[i][j].y + y),
-                static_cast<float>(matrix[i][j].width),
-                static_cast<float>(matrix[i][j].height)};
+                static_cast<float>(0 + x),
+                static_cast<float>(0 + y),
+                static_cast<float>(width),
+                static_cast<float>(height)};
 
-            matrix[i][j].rec = rec;
-
-            if (CheckCollisionPointRec(mousePos, matrix[i][j].rec) && IsMouseButtonDown(0))
+            if (field == 1)
             {
-                matrix[i][j].color = RED;
+                color = BLUE;
             }
-            else if (CheckCollisionPointRec(mousePos, matrix[i][j].rec) && IsMouseButtonDown(1))
+            if (field == 2)
             {
-                matrix[i][j].color = BLUE;
+                color = RED;
             }
-            DrawRectangle(rec.x, rec.y, rec.width, rec.height, matrix[i][j].color);
-            x += matrix[i][j].width + 2;
+            /*
+            Vector2 mousePos = GetMousePosition();
+            if (CheckCollisionPointRec(mousePos, rec) && IsMouseButtonDown(0))
+            {
+                color = RED;
+            }
+            else if (CheckCollisionPointRec(mousePos, rec) && IsMouseButtonDown(1))
+            {
+                color = BLUE;
+            } */
+            DrawRectangle(rec.x, rec.y, rec.width, rec.height, color);
+            x += width + 2;
         }
-        y += matrix[i][0].height + 2;
+        y += height + 2;
         x = 0;
     }
 }
 
-/* int main()
+int main()
 {
-    Player playerOne(1,"Markis");
-    Player playerTwo(2,"Ela");
     Game game = Game();
-    game.move(playerOne,2,2);
+    const Player playerOne(1, "Player One", false);
+    const Player playerTwo(2, "Computer", true);
+    std::array<Player, 2> players = {playerOne, playerTwo};
+    game.setPlayers(players);
+
     //window dimensions
     int width{800};
     int height{600};
     // int windowStart{0};
-
-    //init fields
-    const int size = game.SIZE;
-    Field gameboard[size][size];
-    Field emptyField{200, 200, 0, 0, GRAY};
-
-    for (int i = 0; i < size; i++)
-    {
-        for (int j = 0; j < size; j++)
-        {
-            gameboard[i][j] = emptyField;
-        }
-    }
 
     //settings
     int targetFPS{60};
@@ -85,12 +85,12 @@ void DrawGameboard(Field matrix[][3], int size)
         ClearBackground(WHITE);
         //begin game logic
         //draw player info panel
-        std::stringstream playerName;
+        /*  std::stringstream playerName;
         playerName << "Player name:" << std::endl << playerOne.getName();
-        DrawText(playerName.str().c_str(),650,300,20,RED);
+        DrawText(playerName.str().c_str(),650,300,20,RED); */
         //
-        DrawGameboard(gameboard, size);
+        DrawGameboard(game);
 
         EndDrawing();
     }
-} */
+}

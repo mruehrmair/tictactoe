@@ -3,7 +3,6 @@
 #include "Game.h"
 #include "Player.h"
 
-<<<<<<< HEAD
 void PlayerInput(Game &game, int x, int y)
 {
     if (game.getGameboardField(x, y) == game.EMPTYFIELD)
@@ -19,30 +18,13 @@ void PlayerInput(Game &game, int x, int y)
 }
 
 void DrawGameboard(Game &game)
-=======
-/* struct Field
-{
-    int width;
-    int height;
-    int x;
-    int y;
-    Color color;
-    Rectangle rec;
-};
- */
-void DrawGameboard(Game const &game)
->>>>>>> 5eb4c6cab29908af7c1d454fd12f7cc6661eff4e
 {
     int x{0};
     int y{0};
     int width{200};
     int height{200};
-<<<<<<< HEAD
     Color color;
     Vector2 mousePos = GetMousePosition();
-=======
-    Color color = GRAY;
->>>>>>> 5eb4c6cab29908af7c1d454fd12f7cc6661eff4e
 
     for (int i = 0; i < game.SIZE; i++)
     {
@@ -55,7 +37,6 @@ void DrawGameboard(Game const &game)
                 static_cast<float>(width),
                 static_cast<float>(height)};
 
-<<<<<<< HEAD
             switch (field)
             {
             case game.EMPTYFIELD:
@@ -73,26 +54,6 @@ void DrawGameboard(Game const &game)
                 PlayerInput(game, i, j);
             }
 
-=======
-            if (field == 1)
-            {
-                color = BLUE;
-            }
-            if (field == 2)
-            {
-                color = RED;
-            }
-            /*
-            Vector2 mousePos = GetMousePosition();
-            if (CheckCollisionPointRec(mousePos, rec) && IsMouseButtonDown(0))
-            {
-                color = RED;
-            }
-            else if (CheckCollisionPointRec(mousePos, rec) && IsMouseButtonDown(1))
-            {
-                color = BLUE;
-            } */
->>>>>>> 5eb4c6cab29908af7c1d454fd12f7cc6661eff4e
             DrawRectangle(rec.x, rec.y, rec.width, rec.height, color);
             x += width + 2;
         }
@@ -103,19 +64,13 @@ void DrawGameboard(Game const &game)
 
 int main()
 {
-<<<<<<< HEAD
     //setup game
-=======
->>>>>>> 5eb4c6cab29908af7c1d454fd12f7cc6661eff4e
     Game game = Game();
     const Player playerOne(1, "Player One", false);
     const Player playerTwo(2, "Computer", true);
     std::array<Player, 2> players = {playerOne, playerTwo};
     game.setPlayers(players);
-<<<<<<< HEAD
     game.startGame();
-=======
->>>>>>> 5eb4c6cab29908af7c1d454fd12f7cc6661eff4e
 
     //window dimensions
     int width{800};
@@ -139,10 +94,6 @@ int main()
         playerName << "Player name:" << std::endl << playerOne.getName();
         DrawText(playerName.str().c_str(),650,300,20,RED); */
         //
-<<<<<<< HEAD
-=======
-        DrawGameboard(game);
->>>>>>> 5eb4c6cab29908af7c1d454fd12f7cc6661eff4e
 
         BeginDrawing();
         ClearBackground(WHITE);
@@ -164,8 +115,5 @@ int main()
         } */
         EndDrawing();
     }
-<<<<<<< HEAD
     CloseWindow();
-=======
->>>>>>> 5eb4c6cab29908af7c1d454fd12f7cc6661eff4e
 }

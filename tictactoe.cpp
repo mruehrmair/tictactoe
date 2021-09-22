@@ -103,10 +103,12 @@ int main()
         case game.PLAYERWON:
             game.stopGame();
             DrawText("Game over!", 650, 300, 20, RED);
+            game.startGame();
             break;
         case game.GAMEDRAW:
             game.stopGame();
             DrawText("Draw!", 650, 300, 20, RED);
+            game.startGame();
             break;
         }
 

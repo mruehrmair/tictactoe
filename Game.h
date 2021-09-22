@@ -28,7 +28,7 @@ private:
     int turnNumber = 0;
     int gameState = GAMEEND;
     void initGameBoard();
-    void checkWin(int activePlayerNumber);
+    bool checkWin(int activePlayerNumber, int x, int y);
     void checkDraw();
     int randomNumber(int max);
     std::array<std::array<int, SIZE>, SIZE> gameboard;

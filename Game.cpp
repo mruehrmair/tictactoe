@@ -31,7 +31,7 @@ void Game::move(int x, int y)
     {
         gameState = Game::FIELDTAKEN;
     }
-    checkWin(number);
+    checkWin(number, x, y);
     if (gameState == Game::GAMERUNNING)
     {
         checkDraw();
@@ -68,44 +68,46 @@ void Game::checkDraw()
     gameState = GAMEDRAW;
 }
 
-void Game::checkWin(int activePlayerNumber)
+bool Game::checkWin(int activePlayerNumber, int x, int y)
 {
     for (int i = 0; i < SIZE; i++)
     {
         //check row
-        for (int j = 0; j < SIZE; j++)
-        {
-            if (gameboard[i][j] != activePlayerNumber)
-                break;
-            if (j == SIZE - 1)
-            {
-                gameState = Game::PLAYERWON;
-                return;
-            }
-        }
-        //check col
-        for (int j = 0; j < SIZE; j++)
-        {
-            if (gameboard[j][i] != activePlayerNumber)
-                break;
-            if (j == SIZE - 1)
-            {
-                gameState = Game::PLAYERWON;
-                return;
-            }
-        }
-    }
-    for (int i = 0; i < SIZE; i++)
-    {
-        //check diag
-        if (gameboard[i][i] != activePlayerNumber)
+        if (gameboard[x][i] != activePlayerNumber)
             break;
         if (i == SIZE - 1)
         {
             gameState = Game::PLAYERWON;
-            return;
+            return true;
         }
     }
+    for (int i = 0; i < SIZE; i++)
+    {
+        //check col
+        if (gameboard[i][y] != activePlayerNumber)
+            break;
+        if (i == SIZE - 1)
+        {
+            gameState = Game::PLAYERWON;
+            return true;
+        }
+    }
+    //check diag
+    if (x == y)
+    {
+        for (int i = 0; i < SIZE; i++)
+        {
+
+            if (gameboard[i][i] != activePlayerNumber)
+                break;
+            if (i == SIZE - 1)
+            {
+                gameState = Game::PLAYERWON;
+                return true;
+            }
+        }
+    }
+
     for (int i = 0; i < SIZE; i++)
     {
         //check anti-diag
@@ -114,9 +116,10 @@ void Game::checkWin(int activePlayerNumber)
         if (i == SIZE - 1)
         {
             gameState = Game::PLAYERWON;
-            return;
+            return true;
         }
     }
+    return false;
 }
 
 int Game::getGameboardField(int x, int y) const

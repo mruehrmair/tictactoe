@@ -31,8 +31,11 @@ void Game::move(int x, int y)
     {
         gameState = Game::FIELDTAKEN;
     }
-    checkWin(number, x, y);
-    if (gameState == Game::GAMERUNNING)
+    if (checkWin(number, x, y))
+    {
+        gameState = Game::PLAYERWON;
+    }
+    else
     {
         checkDraw();
     }
@@ -42,6 +45,33 @@ void Game::aiMove()
 {
     int x = randomNumber(2);
     int y = randomNumber(2);
+
+    const int aiNumber = getActivePlayer().getNumber();
+    const int opponentNumber = aiNumber == 2 ? 1 : 2;
+
+    for (int i = 0; i < SIZE; i++)
+    {
+        for (int j = 0; j < SIZE; j++)
+        {
+            if (gameboard[i][j] == EMPTYFIELD)
+            {
+                gameboard[i][j] = aiNumber;
+                if (checkWin(aiNumber, i, j))
+                {
+                    x = i;
+                    y = j;
+                }
+                gameboard[i][j] = opponentNumber;
+                if (checkWin(opponentNumber, i, j))
+                {
+                    x = i;
+                    y = j;
+                }
+                gameboard[i][j] = EMPTYFIELD;
+            }
+        }
+    }
+
     move(x, y);
     while (gameState == Game::FIELDTAKEN)
     {
@@ -77,7 +107,6 @@ bool Game::checkWin(int activePlayerNumber, int x, int y)
             break;
         if (i == SIZE - 1)
         {
-            gameState = Game::PLAYERWON;
             return true;
         }
     }
@@ -88,7 +117,6 @@ bool Game::checkWin(int activePlayerNumber, int x, int y)
             break;
         if (i == SIZE - 1)
         {
-            gameState = Game::PLAYERWON;
             return true;
         }
     }
@@ -102,7 +130,6 @@ bool Game::checkWin(int activePlayerNumber, int x, int y)
                 break;
             if (i == SIZE - 1)
             {
-                gameState = Game::PLAYERWON;
                 return true;
             }
         }
@@ -115,7 +142,6 @@ bool Game::checkWin(int activePlayerNumber, int x, int y)
             break;
         if (i == SIZE - 1)
         {
-            gameState = Game::PLAYERWON;
             return true;
         }
     }

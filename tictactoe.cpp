@@ -8,12 +8,15 @@ void PlayerInput(Game &game, int x, int y)
     if (game.getGameboardField(x, y) == game.EMPTYFIELD)
     {
         game.move(x, y);
-        game.endTurn();
-        if (game.getGameState() == 1)
+        if (game.getGameState() == game.GAMERUNNING)
         {
-            game.aiMove();
             game.endTurn();
+            game.aiMove();
         }
+        if (game.getGameState() == game.GAMERUNNING)
+        {
+            game.endTurn();
+        }       
     }
 }
 
@@ -98,23 +101,27 @@ int main()
         BeginDrawing();
         ClearBackground(WHITE);
         DrawGameboard(game);
+        std::string displayText;
+        std::string winningPlayerName;
         switch (game.getGameState())
         {
         case game.PLAYERWON:
-            game.stopGame();
-            DrawText("Game over!", 650, 300, 20, RED);
-            game.startGame();
+            winningPlayerName = game.getActivePlayer().getNumber() == playerOne.getNumber() ? playerOne.getName() : playerTwo.getName();
+            displayText = winningPlayerName + " wins!";
             break;
         case game.GAMEDRAW:
-            game.stopGame();
-            DrawText("Draw!", 650, 300, 20, RED);
-            game.startGame();
+            displayText = "Game is draw!";
             break;
         }
-
-        /* while (!(game.getGameState() == game.GAMEEND))
+        if (game.getGameState() != game.GAMERUNNING)
         {
-        } */
+            DrawText(displayText.c_str(), 620, 300, 20, RED);
+            if (IsMouseButtonPressed(0))
+            {
+                game.stopGame();
+                game.startGame();
+            }
+        }
         EndDrawing();
     }
     CloseWindow();
